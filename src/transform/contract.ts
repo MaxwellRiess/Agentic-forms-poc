@@ -31,6 +31,8 @@ export interface ContractQuestion {
   required: boolean;
   answerType: string;
   options?: string[];
-  /** Plain-language note about conditional routing, if any. */
+  /** Plain-language note about conditional routing this answer drives, if any. */
   routingNote?: string;
+  /** Plain-language note about when this question itself applies, if it can be skipped. */
+  appliesWhen?: string;
 }

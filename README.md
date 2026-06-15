@@ -35,21 +35,21 @@ never re-implement schema logic, and both submit through the same `src/core/subm
 ```
 fixtures/        sample form definitions (pothole; parking permit w/ routing; food business)
 src/domain/      FormDefinition + answer_type types (mirror GOV.UK Forms)
-src/transform/   the canonical transform (answer-type-map, to-json-schema, contract, index)
+src/transform/   the canonical transform (answer-type-map, to-json-schema, routing-to-conditionals, contract, index)
 src/validate/    ajv validation against the generated schema (shared by both transports)
 src/core/        submitForm — single submit path
 src/mcp/         MCP server: list_forms, describe_form, submit_form
 src/rest/        Fastify routes, OpenAPI, /.well-known/agents.json, llms.txt
 bin/             mcp.ts (stdio) and rest.ts (HTTP) entrypoints
 demo/            scripted offline agent run + prompts for driving a real LLM
-test/            transform/validation unit tests + MCP & REST integration + parity test
+test/            transform/validation/routing unit tests + MCP & REST integration + parity test
 ```
 
 ## Run it
 
 ```bash
 npm install
-npm test            # 27 tests: transform, validation, MCP & REST e2e, cross-transport parity
+npm test            # 32 tests: transform, validation, branch-aware routing, MCP & REST e2e, parity
 npm run demo        # offline scripted "agent" completes a form via MCP
 npm run rest        # REST + discovery on http://localhost:3000
 npm run mcp         # MCP server on stdio

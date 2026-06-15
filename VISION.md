@@ -60,8 +60,14 @@ For anything consequential, the human commits — not the agent.
 GOV.UK forms already support conditional routing. Agents should benefit from it:
 
 - **Branch-aware schemas** so an agent only collects answers that are actually relevant.
-  (This POC exposes routing descriptively and keeps the schema flat — generating
-  branch-aware sub-schemas from the routing rules is the natural next step.)
+  *Prototyped here:* `src/transform/routing-to-conditionals.ts` compiles GOV.UK skip
+  routing into JSON Schema `if/then/else`, so a question that is skipped on a branch must
+  be absent, and a mandatory question that is on the branch is required. See the
+  parking-permit fixture (a "Resident permit" skips the "Business name" question).
+- **Next:** chained/multi-hop routing and routing questions that are themselves
+  conditionally skipped; a two-phase flow where the agent submits routing answers first and
+  gets back the narrowed set of remaining questions (mirroring how forms-runner reveals
+  pages to humans).
 - **Machine-readable eligibility rules** so an agent can pre-check whether the citizen even
   qualifies before asking a single question.
 

@@ -23,6 +23,15 @@ export interface JSONSchema {
   items?: JSONSchema;
   uniqueItems?: boolean;
   minItems?: number;
+  // conditional / combinators (used for branch-aware routing)
+  const?: string;
+  anyOf?: JSONSchema[];
+  allOf?: JSONSchema[];
+  oneOf?: JSONSchema[];
+  not?: JSONSchema;
+  if?: JSONSchema;
+  then?: JSONSchema;
+  else?: JSONSchema;
   // meta
   $schema?: string;
   title?: string;

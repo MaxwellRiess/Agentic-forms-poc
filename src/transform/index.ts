@@ -2,6 +2,7 @@ import type { FormDefinition, Page } from "../domain/form-definition.js";
 import { buildFieldIndex } from "./field-key.js";
 import { toJsonSchema } from "./to-json-schema.js";
 import { toMcpAnswersSchema } from "./to-mcp-input-schema.js";
+import { analyseRouting } from "./routing-to-conditionals.js";
 import type { AgentContract, ContractQuestion } from "./contract.js";
 
 export * from "./contract.js";
@@ -30,6 +31,7 @@ function routingNote(page: Page): string | undefined {
 export function buildAgentContract(form: FormDefinition): AgentContract {
   const fieldIndex = buildFieldIndex(form);
   const pageById = new Map(form.pages.map((p) => [p.id, p]));
+  const routing = analyseRouting(form, fieldIndex);
 
   const questions: ContractQuestion[] = fieldIndex.map((entry) => {
     const page = pageById.get(entry.pageId)!;
@@ -37,10 +39,12 @@ export function buildAgentContract(form: FormDefinition): AgentContract {
       key: entry.key,
       questionText: page.questionText,
       hintText: page.hintText,
-      required: !page.isOptional,
+      // Conditionally-skippable questions are required only on their branch.
+      required: !page.isOptional && !routing.conditionalKeys.has(entry.key),
       answerType: page.answerType,
       options: page.answerSettings?.selectionOptions?.map((o) => o.name),
       routingNote: routingNote(page),
+      appliesWhen: routing.applicability.get(page.id),
     };
   });
 

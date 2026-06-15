@@ -14,44 +14,43 @@
         "selectionType": "radio",
         "selectionOptions": [
           { "name": "Resident permit" },
-          { "name": "Visitor permit" },
           { "name": "Business permit" }
         ]
       },
       "routing": [
-        { "answerValue": "Business permit", "goToPageId": "q5" }
+        { "answerValue": "Resident permit", "goToPageId": "q3" }
       ]
     },
     {
       "id": "q2",
       "position": 2,
+      "questionText": "Business name",
+      "hintText": "The registered name of your business. Only needed for a business permit.",
+      "isOptional": false,
+      "answerType": "organisation_name"
+    },
+    {
+      "id": "q3",
+      "position": 3,
       "questionText": "Your name",
       "isOptional": false,
       "answerType": "name",
       "answerSettings": { "includeTitle": true }
     },
     {
-      "id": "q3",
-      "position": 3,
+      "id": "q4",
+      "position": 4,
       "questionText": "Your home address",
       "isOptional": false,
       "answerType": "address"
     },
     {
-      "id": "q4",
-      "position": 4,
+      "id": "q5",
+      "position": 5,
       "questionText": "Vehicle registration number",
       "hintText": "For example AB12 CDE.",
       "isOptional": false,
       "answerType": "text"
-    },
-    {
-      "id": "q5",
-      "position": 5,
-      "questionText": "Business name",
-      "hintText": "Only needed for a business permit.",
-      "isOptional": true,
-      "answerType": "organisation_name"
     },
     {
       "id": "q6",
