@@ -104,6 +104,51 @@ This TypeScript POC deliberately proves the *shape and feasibility* of the proje
 production win is wiring that projection into the existing Rails form-definition pipeline,
 then layering on identity, consent, audit and payments as above.
 
+## Limitations and open questions
+
+This proposal is a strong *bridge*, not a finished answer. It is worth being explicit about
+where it is weak — a proposal that names its own limitations tends to be more credible than
+one that doesn't.
+
+1. **It makes simple *forms* legible, not "government services."** GOV.UK Forms is
+   deliberately for low-complexity services: no payments, no integrations, no case
+   management, with submissions often landing in an inbox as CSV/PDF. The high-value,
+   high-volume services — HMRC/tax, Universal Credit, passports, visas, DVLA — are bespoke
+   and are not (and will not be) built on Forms. So the honest claim is "agent-legible
+   **simple forms**", which is the long tail, not the services people most want an agent
+   for.
+
+2. **The POC proves the easy 20%; the hard 80% is bracketed as "future" above.** Generating
+   a schema is cheap. Identity/delegated auth (GOV.UK One Login has no agent-delegation
+   model today), consent, liability, payments, fraud and audit are the real barrier — and
+   they are institutionally hard, not just technically hard. The schema is the enabler, not
+   the project.
+
+3. **The bottleneck is behind the front door.** Agentic submission collapses the cost of
+   *creating* submissions while the cost of *processing* them (often human caseworking)
+   stays flat. Form friction today quietly acts as a rate limiter; removing it makes spam,
+   fraudulent applications and caseworker-DoS cheaper too, against a high-value target.
+   Agent-scale input meeting human-scale processing needs deliberate design (rate limits,
+   triage, capacity planning).
+
+4. **Accountability does not map cleanly onto agents.** Government submissions carry legal
+   weight ("I confirm this is true"). If an agent misreads a user or hallucinates a field on
+   a benefits or immigration form, the consequences are severe and liability is unresolved.
+   Human-in-the-loop confirmation is load-bearing, and getting it right for vulnerable users
+   on high-stakes services is harder than anything in this POC.
+
+5. **Forms may be the on-ramp, not the destination.** A form is a human-UI artifact (pages,
+   hints, "what happens next") that exists to guide people through data entry. For
+   machine-to-government interaction the right primitive may be a clean service/data API,
+   with the form as one renderer of it. Making the form *be* the agent contract risks
+   encoding the human-form metaphor into the machine layer rather than designing that layer
+   properly. Forms-as-agent-contract is a great bridge; it is a questionable end state.
+
+**Net:** back it as a wedge — the "free projection" insight is sound and the near-term value
+for simple forms and accessibility is real — but pitch it as "agent-legible simple forms",
+treat identity/consent/liability/abuse/back-end capacity as the actual project, and be
+explicit that structured service APIs (which forms render) may be the longer-term goal.
+
 ---
 
 *One sentence: because GOV.UK Forms already models services as data, agentic access is not a
