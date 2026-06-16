@@ -18,6 +18,27 @@ contract (JSON Schema + discovery descriptor + MCP tools) is generated automatic
 POC demonstrates exactly that projection. The rest of this document is what stands between
 the POC and production.
 
+## A shippable v1, and the division of labour
+
+This does not have to be boil-the-ocean. In conversation with the GOV.UK Forms team, a
+pragmatic split emerged: the **Forms platform** builds a handful of APIs, and **the agent
+layer** (this POC) is then built largely independently on top. The concrete platform work:
+
+1. a **public form-document API** (with internal-only fields kept internal),
+2. a **submission API**,
+3. **list / discover / search** for forms,
+4. **high-volume submission delivery** (webhooks, etc.), and
+5. **good documentation**.
+
+Much of this the platform wants anyway for other roadmap goals (an App, save-and-return),
+so the agentic use case rides on existing momentum rather than demanding net-new investment.
+The exact request/response shapes and the public-vs-internal field split are written up in
+[`INTERFACE.md`](INTERFACE.md).
+
+Crucially, a v1 can **defer identity and payments** (sections 2 and 6 below): most simple
+forms use neither today, so the long tail is shippable without them. They become necessary
+for the high-value services, later — not for the first useful release.
+
 ## 1. A discovery standard
 
 Agents need to find services by *intent*, not URL. We propose:
@@ -30,9 +51,10 @@ Agents need to find services by *intent*, not URL. We propose:
 - Convergence on existing standards (**OpenAPI 3.1**, **JSON Schema**, **MCP**) so any
   agent framework interoperates without bespoke glue.
 
-## 2. Identity and authorisation (GOV.UK One Login)
+## 2. Identity and authorisation (GOV.UK One Login) — *deferrable for v1*
 
-An agent acting for a citizen must prove it is authorised to do so.
+An agent acting for a citizen must prove it is authorised to do so. Note this is **not a v1
+blocker** for the simple-forms long tail, most of which require no sign-in today.
 
 - Delegated, **scoped, revocable** authorisation via **GOV.UK One Login** (OAuth-style):
   the citizen grants an agent permission to submit *this kind of* form, and can revoke it.
@@ -71,9 +93,10 @@ GOV.UK forms already support conditional routing. Agents should benefit from it:
 - **Machine-readable eligibility rules** so an agent can pre-check whether the citizen even
   qualifies before asking a single question.
 
-## 6. Payments
+## 6. Payments — *deferrable for v1*
 
-Many services charge a fee.
+Many services charge a fee — but most simple forms do not, so payments are not a v1 blocker
+for the target subset.
 
 - An **agent-safe payment handoff** via **GOV.UK Pay**, where card details and the final
   payment authorisation stay with the human — the agent orchestrates, it never holds funds.
@@ -118,18 +141,21 @@ one that doesn't.
    **simple forms**", which is the long tail, not the services people most want an agent
    for.
 
-2. **The POC proves the easy 20%; the hard 80% is bracketed as "future" above.** Generating
-   a schema is cheap. Identity/delegated auth (GOV.UK One Login has no agent-delegation
-   model today), consent, liability, payments, fraud and audit are the real barrier — and
-   they are institutionally hard, not just technically hard. The schema is the enabler, not
-   the project.
+2. **The schema is the easy part — but for the v1 subset, the easy part is most of the
+   product.** Generating a schema is cheap; identity, consent, liability, payments, fraud
+   and audit are harder and institutionally, not just technically, hard. The important
+   nuance (raised by the Forms team) is that *the simple forms a v1 targets use neither auth
+   nor payments*, so for that subset the cheap part genuinely is most of what's needed. The
+   hard parts gate the *high-value* services, not the first useful release.
 
-3. **The bottleneck is behind the front door.** Agentic submission collapses the cost of
-   *creating* submissions while the cost of *processing* them (often human caseworking)
-   stays flat. Form friction today quietly acts as a rate limiter; removing it makes spam,
-   fraudulent applications and caseworker-DoS cheaper too, against a high-value target.
-   Agent-scale input meeting human-scale processing needs deliberate design (rate limits,
-   triage, capacity planning).
+3. **The bottleneck is behind the front door — but this is a shift in scale, not a novel
+   risk.** Agentic submission lowers the cost of *creating* submissions while the cost of
+   *processing* them (often human caseworking) stays flat, and form friction does quiet
+   rate-limiting work today. The Forms team's fair pushback: agents don't introduce a *new*
+   category of risk — spam, fraud and capacity already exist and are handled with the same
+   tools (rate limiting, departmental data validation, better platform-side validation),
+   and high-volume delivery is on the roadmap regardless. So the honest framing is
+   quantitative: plan for a changed volume curve, using mechanisms that already exist.
 
 4. **Accountability does not map cleanly onto agents.** Government submissions carry legal
    weight ("I confirm this is true"). If an agent misreads a user or hallucinates a field on
@@ -144,10 +170,12 @@ one that doesn't.
    encoding the human-form metaphor into the machine layer rather than designing that layer
    properly. Forms-as-agent-contract is a great bridge; it is a questionable end state.
 
-**Net:** back it as a wedge — the "free projection" insight is sound and the near-term value
-for simple forms and accessibility is real — but pitch it as "agent-legible simple forms",
-treat identity/consent/liability/abuse/back-end capacity as the actual project, and be
-explicit that structured service APIs (which forms render) may be the longer-term goal.
+**Net:** back it as a wedge — the "free projection" insight is sound, the near-term value
+for simple forms and accessibility is real, and (per the Forms team) a v1 is shippable
+sooner than the full list above implies, by deferring auth/payments and building on platform
+work that's already on the roadmap. Pitch it as "agent-legible simple forms", scope the
+first release to the platform APIs in [`INTERFACE.md`](INTERFACE.md), and keep in view that
+structured service APIs (which forms render) may be the longer-term goal.
 
 ---
 

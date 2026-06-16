@@ -32,7 +32,9 @@ This is a **wedge / bridge**, deliberately scoped:
 
 The honest one-line claim is *"agent-legible simple forms"*. See
 [`VISION.md`](VISION.md) — including its **Limitations and open questions** — for the full,
-self-critical argument.
+self-critical argument, and [`INTERFACE.md`](INTERFACE.md) for the platform/agent-layer
+boundary (what the Forms team builds vs. what the agent layer builds) that makes a v1
+shippable sooner.
 
 ## The one transform
 
