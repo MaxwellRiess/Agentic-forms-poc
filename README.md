@@ -1,4 +1,4 @@
-# Agentic Forms POC — making GOV.UK services legible to AI agents
+# Agentic Forms POC — making GOV.UK *forms* legible to AI agents
 
 **Thesis:** [GOV.UK Forms](https://github.com/govuk-forms/forms) already stores every
 form as structured data — a form is `pages → questions → answer_types` (text, email,
@@ -14,6 +14,25 @@ a machine-readable agent contract exposed two ways:
 
 A service team writes a normal form. The agent interface falls out for free — and the two
 surfaces can never drift, because both are generated from the same mapping.
+
+### What this is, and what it isn't
+
+This is a **wedge / bridge**, deliberately scoped:
+
+- It makes **simple GOV.UK forms** agent-legible — the long tail of low-complexity
+  services. It does **not** cover the high-value services people most want an agent for
+  (HMRC/tax, Universal Credit, passports, visas, DVLA), which are bespoke and not built on
+  Forms.
+- The cheap, demonstrated part is the **schema projection**. The hard part — delegated
+  identity (GOV.UK One Login), consent, liability, payments, fraud/abuse, and back-end
+  capacity once submission gets cheap — is the *actual* project, not an appendix. The POC
+  proves the shape so those harder questions can be discussed concretely.
+- Forms are likely the **on-ramp, not the destination**; the longer-term primitive may be
+  structured service APIs that forms merely render.
+
+The honest one-line claim is *"agent-legible simple forms"*. See
+[`VISION.md`](VISION.md) — including its **Limitations and open questions** — for the full,
+self-critical argument.
 
 ## The one transform
 
@@ -70,9 +89,15 @@ curl -X POST localhost:3000/forms/report-a-pothole/submissions \
 To drive it with a real agent (Claude), see [`demo/prompts.md`](demo/prompts.md) for the
 MCP client config and example prompts.
 
-## What needs to happen next
+## What needs to happen next (and what to be sceptical of)
 
-This POC proves the *shape*. Turning it into real "easy agentic gov services" needs
-discovery standards, citizen identity/consent, audit, payments and trust/safety — and,
-ultimately, generating the contract inside `forms-runner`/`forms-admin` itself. See
-[`VISION.md`](VISION.md).
+This POC proves the *shape*. Turning it into something real needs the hard parts that the
+projection deliberately doesn't solve: discovery standards, delegated citizen
+identity/consent, audit, payments, trust/safety, and a back-end that can cope when
+submission gets cheap — plus, ultimately, generating the contract inside
+`forms-runner`/`forms-admin` itself.
+
+It is also worth holding the idea critically: it covers simple forms rather than whole
+services, the demo's easy part is inversely correlated with the difficulty of what remains,
+and forms may be a bridge rather than the destination. The full case *and* its weaknesses
+are in [`VISION.md`](VISION.md) → **Limitations and open questions**.
