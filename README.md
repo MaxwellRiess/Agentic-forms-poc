@@ -5,8 +5,7 @@ form as structured data — a form is `pages → questions → answer_types` (te
 date, address, selection, …), served to the [forms-runner](https://github.com/alphagov/forms-runner)
 which renders it for humans. **That same definition is exactly what an AI agent needs.**
 
-So "agentic integration out of the box" isn't a new product — it's a *projection*. This
-POC takes a GOV.UK-style form definition and, with **one canonical transform**, generates
+This POC takes a GOV.UK-style form definition and, with one transform, generates
 a machine-readable agent contract exposed two ways:
 
 - an **MCP server** (form-as-tools) that an agent like Claude calls directly, and
@@ -23,10 +22,9 @@ This is a **wedge / bridge**, deliberately scoped:
   services. It does **not** cover the high-value services people most want an agent for
   (HMRC/tax, Universal Credit, passports, visas, DVLA), which are bespoke and not built on
   Forms.
-- The cheap, demonstrated part is the **schema projection**. The hard part — delegated
+- The cheap, demonstrated part is agent ablityt to use a use a service **schema**. Many hard aspect of agent using service remains untouched, specifically delegated
   identity (GOV.UK One Login), consent, liability, payments, fraud/abuse, and back-end
-  capacity once submission gets cheap — is the *actual* project, not an appendix. The POC
-  proves the shape so those harder questions can be discussed concretely.
+  capacity once submission gets cheap. 
 - Forms are likely the **on-ramp, not the destination**; the longer-term primitive may be
   structured service APIs that forms merely render.
 
